@@ -2,8 +2,11 @@
 {{- with resources.Get "js/vendor/bootstrap.bundle.min.js" | fingerprint }}
 <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
 {{- end }}
-{{- /* Copy buttons on code blocks (render-codeblock.html sets hasCodeBlock) */}}
-{{- if .Store.Get "hasCodeBlock" }}
+{{- /* Copy buttons on code blocks (rendered by _markup/render-codeblock.html).
+       Checked on the content: a flag set from the render hook can land on
+       another page when that page's content is first rendered elsewhere,
+       e.g. by the search index. */}}
+{{- if strings.Contains .Content `class="expressive-code"` }}
 {{- partial "footer/js.html" (dict "src" "js/clipboard.js") }}
 {{- end }}
 {{- if site.Params.search.enable }}

@@ -1,0 +1,59 @@
+{{- /*
+  Title, description, canonical, favicons, Open Graph, Twitter and JSON-LD.
+
+  Page front matter: seo.title, seo.description, seo.canonical, seo.noindex, images.
+  Site params: description, images, social.twitter, seo.title.separator,
+  seo.title.suffix, seo.schemas.name, seo.schemas.logo, seo.schemas.sameAs.
+*/ -}}
+{{- $seo := .Params.seo | default dict -}}
+
+{{- $title := $seo.title -}}
+{{- if not $title -}}
+  {{- $sep := site.Params.seo.title.separator | default " | " -}}
+  {{- $title = printf "%s%s%s" .Title $sep (site.Params.seo.title.suffix | default site.Title) -}}
+{{- end }}
+<title>{{ $title }}</title>
+
+{{- $description := or $seo.description .Description site.Params.description }}
+<meta name="description" content="{{ $description }}">
+<link rel="canonical" href="{{ $seo.canonical | default .Permalink }}">
+{{- if or $seo.noindex (eq .Kind "404") }}
+<meta name="robots" content="noindex">
+{{- end }}
+{{- with .OutputFormats.Get "rss" }}
+<link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="{{ site.Title }}">
+{{- end }}
+
+{{- partialCached "head/favicons.html" . }}
+
+{{- $images := slice -}}
+{{- range .Params.images | default site.Params.images -}}
+  {{- $images = $images | append (absURL .) -}}
+{{- end }}
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ .Title | default site.Title | plainify }}">
+<meta property="og:description" content="{{ $description | plainify }}">
+<meta property="og:locale" content="{{ replace (site.Language.LanguageCode | default "en") "-" "_" }}">
+<meta property="og:type" content="{{ cond .IsPage "article" "website" }}">
+{{- range first 6 $images }}
+<meta property="og:image" content="{{ . }}">
+{{- end }}
+<meta name="twitter:card" content="{{ cond (gt (len $images) 0) "summary_large_image" "summary" }}">
+{{- with index $images 0 }}
+<meta name="twitter:image" content="{{ . }}">
+{{- end }}
+<meta name="twitter:title" content="{{ .Title | default site.Title | plainify }}">
+<meta name="twitter:description" content="{{ $description | plainify }}">
+{{- with site.Params.social.twitter }}
+<meta name="twitter:site" content="@{{ strings.TrimPrefix "@" . }}">
+{{- end }}
+
+{{- if .IsHome }}
+{{- $website := dict "@type" "WebSite" "url" site.BaseURL "name" site.Title "description" site.Params.description }}
+{{- $org := dict "@type" "Organization" "url" site.BaseURL "name" (site.Params.seo.schemas.name | default "Opsero Electronic Design Inc.") }}
+{{- with site.Params.seo.schemas.logo }}{{ $org = merge $org (dict "logo" (absURL .)) }}{{ end }}
+{{- with site.Params.seo.schemas.sameAs }}{{ $org = merge $org (dict "sameAs" .) }}{{ end }}
+{{- with $images }}{{ $org = merge $org (dict "image" .) }}{{ end }}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" (slice $website $org) | jsonify | safeJS }}</script>
+{{- end }}

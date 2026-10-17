@@ -1,0 +1,9 @@
+{{- /* Classes for <body>, e.g. "single home" or "list section buy" */ -}}
+{{- $template := cond (in (slice "page" "home" "404") .Kind) "single" "list" -}}
+{{- $name := "" -}}
+{{- if .IsHome }}{{ $name = "home" -}}
+{{- else if eq .Kind "404" }}{{ $name = "error404" -}}
+{{- else if .Section }}{{ $name = printf "section %s" .Section -}}
+{{- else if .File }}{{ $name = .File.ContentBaseName -}}
+{{- end -}}
+{{- return (printf "%s %s" $template $name) -}}

@@ -1,0 +1,14 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{- range slice "regular" "500" "700" }}
+  <link rel="preload" href="{{ printf "fonts/vendor/jost/jost-v4-latin-%s.woff2" . | relURL }}" as="font" type="font/woff2" crossorigin>
+  {{- end }}
+  {{- /* Sets data-bs-theme before the page renders, so it must not be async */}}
+  {{- with resources.Get "js/color-mode.js" | minify | fingerprint }}
+  <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}"></script>
+  {{- end }}
+  {{- partialCached "head/stylesheet.html" . }}
+  {{- partial "head/seo.html" . }}
+  {{- partial "head/custom-head.html" . }}
+</head>

@@ -1,0 +1,45 @@
+{{- /*
+  Opsero footer: logo and columns from data/homepage.yml (footer.logo,
+  footer.list[].title/content), the copyright line, and the "footer" menu.
+  Site param "footer" replaces the default copyright line.
+*/ -}}
+<footer class="footer text-muted" style="background-color: #222222;">
+  {{- with site.Data.homepage.footer }}
+  <div class="container">
+    <div class="row justify-content-center mb-5">
+      <div class="col-lg-3">
+        <h3><img class="img-fluid" src="{{ .logo | relURL }}" alt="Opsero" style="max-width: 100%; max-height: 80px;"></h3>
+      </div>
+      {{- range .list }}
+      <div class="col-lg-4">
+        <h4 class="h4 text-white">{{ .title | markdownify }}</h4>
+        <p class="text-white-50">{{ .content | markdownify }}</p>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+  {{- end }}
+  <div class="container">
+    <div class="row justify-content-center text-white-50 text-center">
+      <div class="col-lg-12 order-last order-lg-first">
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            {{- with site.Params.footer }}{{ . | safeHTML }}{{ else -}}
+            Copyright {{ now.Year }} <a class="text-white" href="https://opsero.com/">Opsero Electronic Design Inc.</a> All rights reserved.
+            Powered by <a class="text-white" href="https://www.netlify.com/">Netlify</a> and <a class="text-white" href="https://gohugo.io/">Hugo</a>
+            {{- end -}}
+          </li>
+        </ul>
+      </div>
+      {{- with site.Menus.footer }}
+      <div class="col-lg-8 order-first order-lg-last text-lg-end">
+        <ul class="list-inline">
+          {{- range . }}
+          <li class="list-inline-item"><a href="{{ .URL | relLangURL }}">{{ .Name }}</a></li>
+          {{- end }}
+        </ul>
+      </div>
+      {{- end }}
+    </div>
+  </div>
+</footer>

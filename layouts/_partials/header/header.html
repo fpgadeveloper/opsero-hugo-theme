@@ -1,0 +1,62 @@
+{{- /*
+  Sticky navbar: logo (light and dark versions), the "main" menu with one level
+  of dropdowns, and the color mode toggle. On small screens the menu moves into
+  an offcanvas panel.
+
+  Site params: logoImage, logoImageDark, logoWidth, containerBreakpoint.
+*/ -}}
+<div class="sticky-top">
+<header class="navbar navbar-expand-lg">
+  <div class="container-{{ site.Params.containerBreakpoint | default "lg" }}">
+
+    <a class="navbar-brand me-auto me-lg-3" href="{{ "/" | relLangURL }}" aria-label="{{ site.Title }}">
+      <img class="site-logo site-logo--light" src="{{ site.Params.logoImage | relURL }}" alt="{{ site.Title }}" {{ with site.Params.logoWidth }}width="{{ . }}"{{ end }}>
+      <img class="site-logo site-logo--dark" src="{{ site.Params.logoImageDark | default site.Params.logoImage | relURL }}" alt="{{ site.Title }}" {{ with site.Params.logoWidth }}width="{{ . }}"{{ end }}>
+    </a>
+
+    <button class="btn btn-link nav-link mx-2 order-3 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavMain" aria-controls="offcanvasNavMain" aria-label="Open main navigation menu">
+      {{ partial "icon.html" "menu" }}
+    </button>
+
+    <div class="offcanvas offcanvas-end h-auto" tabindex="-1" id="offcanvasNavMain" aria-labelledby="offcanvasNavMainLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavMainLabel">{{ site.Title }}</h5>
+        <button type="button" class="btn btn-link nav-link p-0 ms-auto" data-bs-dismiss="offcanvas" aria-label="Close">
+          {{ partial "icon.html" "x" }}
+        </button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between">
+        <ul class="navbar-nav flex-grow-1">
+          {{- $current := . }}
+          {{- range site.Menus.main }}
+            {{- $active := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) (eq .Name $current.Title) }}
+            {{- if .HasChildren }}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{- .Name }}{{ partial "icon.html" "chevron-down" -}}
+            </a>
+            <ul class="dropdown-menu shadow rounded border-0">
+              {{- range .Children }}
+                {{- $active := eq .Name $current.Title }}
+              <li><a class="dropdown-item{{ if $active }} active{{ end }}" href="{{ .URL | relLangURL }}"{{ if $active }} aria-current="true"{{ end }}>{{ .Name }}</a></li>
+              {{- end }}
+            </ul>
+          </li>
+            {{- else }}
+          <li class="nav-item">
+            <a class="nav-link{{ if $active }} active{{ end }}" href="{{ .URL | relLangURL }}"{{ if $active }} aria-current="true"{{ end }}>{{ .Name }}</a>
+          </li>
+            {{- end }}
+          {{- end }}
+        </ul>
+
+        <button id="buttonColorMode" class="btn btn-link mx-auto nav-link p-0 ms-lg-2 me-lg-1" type="button" aria-label="Toggle theme">
+          {{ partial "icon.html" (dict "name" "moon" "attrs" `data-bs-theme-value="dark"`) }}
+          {{ partial "icon.html" (dict "name" "sun" "attrs" `data-bs-theme-value="light"`) }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</header>
+</div>

@@ -1,0 +1,9 @@
+{{- $opts := dict "transpiler" "libsass" "targetPath" "main.css" -}}
+{{- if hugo.IsProduction -}}
+  {{- $opts = merge $opts (dict "outputStyle" "compressed") -}}
+{{- else -}}
+  {{- $opts = merge $opts (dict "enableSourceMap" true) -}}
+{{- end -}}
+{{- with resources.Get "scss/main.scss" | css.Sass $opts | fingerprint "sha512" }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+{{- end }}

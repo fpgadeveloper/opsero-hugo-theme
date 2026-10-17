@@ -1,0 +1,5 @@
+{{- /* Bootstrap provides the navbar dropdowns and the mobile offcanvas menu */}}
+{{- with resources.Get "js/vendor/bootstrap.bundle.min.js" | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+{{- partial "footer/scripts-custom.html" . }}

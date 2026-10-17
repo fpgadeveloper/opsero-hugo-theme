@@ -1,0 +1,6 @@
+// Styles shared by all Opsero sites
+
+// Navbar logo: show the light logo by default, the dark one in dark mode
+.site-logo--dark { display: none; }
+[data-bs-theme="dark"] .site-logo--light { display: none; }
+[data-bs-theme="dark"] .site-logo--dark { display: inline-block; }

@@ -1,0 +1,30 @@
+{{- /*
+  Generates favicon.ico and PNG icons from assets/favicon.png (at least
+  512x512), copies assets/favicon.svg, and writes manifest.webmanifest.
+*/ -}}
+{{- with resources.Get "favicon.png" }}
+  {{- $favicon := . }}
+  {{- $ico := (.Resize "32x32").Content | resources.FromString "favicon.ico" }}
+<link rel="icon" href="{{ $ico.RelPermalink }}" sizes="32x32">
+  {{- with resources.Get "favicon.svg" }}
+<link rel="icon" href="{{ (resources.Copy "favicon.svg" .).RelPermalink }}" type="image/svg+xml">
+  {{- end }}
+  {{- $apple := .Resize "180x180" | resources.Copy "apple-touch-icon.png" }}
+<link rel="apple-touch-icon" href="{{ $apple.RelPermalink }}" sizes="180x180">
+  {{- $icons := slice }}
+  {{- range slice "192x192" "512x512" }}
+    {{- $img := $favicon.Resize . | resources.Copy (printf "favicon-%s.png" .) }}
+    {{- $icons = $icons | append (dict "src" $img.RelPermalink "sizes" . "type" "image/png") }}
+<link rel="icon" href="{{ $img.RelPermalink }}" sizes="{{ . }}" type="image/png">
+  {{- end }}
+  {{- $manifest := dict
+      "name" site.Title "short_name" site.Title
+      "lang" (site.Language.LanguageCode | default "en")
+      "icons" $icons
+      "theme_color" "#ffffff" "background_color" "#ffffff"
+      "display" "standalone" "start_url" site.Home.RelPermalink }}
+  {{- $res := jsonify (dict "indent" "  ") $manifest | resources.FromString "manifest.webmanifest" }}
+<link rel="manifest" href="{{ $res.RelPermalink }}">
+{{- else }}
+  {{- warnf "assets/favicon.png is missing; add one that is at least 512x512 pixels." }}
+{{- end }}

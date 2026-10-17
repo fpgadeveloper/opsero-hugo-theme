@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="{{ site.Language.LanguageCode | default "en" }}" data-bs-theme="auto">
+  {{ partial "head/head.html" . }}
+  <body class="{{ partial "body-class.html" . }}">
+    {{ partial "header/header.html" . }}
+    <div class="wrap container-{{ site.Params.containerBreakpoint | default "lg" }}" role="document">
+      <div class="content">
+        {{ block "main" . }}{{ end }}
+      </div>
+    </div>
+    {{ block "sidebar-prefooter" . }}{{ end }}
+    {{ block "sidebar-footer" . }}{{ end }}
+    {{ partial "footer/footer.html" . }}
+    {{ partial "footer/scripts.html" . }}
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{{- /*
+  Markdown images: a plain <img> with the image's size, loaded lazily. Images
+  are served as they are in the page bundle (no resizing at build time), so
+  optimize them when they are added.
+*/ -}}
+{{- $u := urls.Parse .Destination -}}
+{{- $img := "" -}}
+{{- if not $u.IsAbs }}{{ $img = .Page.Resources.Get $u.Path }}{{ end -}}
+{{- with $img -}}
+  {{- partial "image.html" (dict "src" . "alt" $.PlainText "title" $.Title) -}}
+{{- else -}}
+  <img src="{{ .Destination | safeURL }}" alt="{{ .PlainText }}"{{ with .Title }} title="{{ . }}"{{ end }} decoding="async" loading="lazy">
+{{- end -}}

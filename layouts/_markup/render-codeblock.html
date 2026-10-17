@@ -1,0 +1,27 @@
+{{- /* Code block with a terminal-style frame and an optional title, adapted from @thulite/doks-core (MIT). */ -}}
+{{- .Page.Store.Set "hasCodeBlock" true }}
+{{- $terminalLanguages := slice "bash" "sh" "shell" "powershell" }}
+{{- $terminalClass := "" }}
+{{- $frame := .Attributes.frame }}
+{{- if and (ne $frame "none") (in $terminalLanguages .Type) }}
+  {{- $terminalClass = " is-terminal" }}
+{{- end }}
+
+{{- $title := .Attributes.title }}
+{{- $titleClass := "" }}
+{{ with $title}}
+  {{- $titleClass = " has-title" }}
+{{- end }}
+
+{{- $result := transform.HighlightCodeBlock . }}
+
+<div class="expressive-code">
+  <figure class="frame{{ $terminalClass }}{{ $titleClass }} not-content">
+  <figcaption class="header">
+    <span class="title">
+      {{- with $title -}}{{ . }}{{- end -}}
+    </span>
+  </figcaption>
+  {{ $result.Wrapped }}
+  </figure>
+</div>

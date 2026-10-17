@@ -1,0 +1,11 @@
+{{- /*
+  <img> for an image resource, with its width and height so the page doesn't
+  jump while it loads. No processing: the file is served as it is.
+  Usage: partial "image.html" (dict "src" $resource "alt" "..." "class" "..."
+         "loading" "eager")   (title, class and loading are optional)
+*/ -}}
+{{- $img := .src -}}
+<img src="{{ $img.RelPermalink }}"
+  {{- if ne $img.MediaType.SubType "svg" }} width="{{ $img.Width }}" height="{{ $img.Height }}"{{ end }} decoding="async" loading="{{ .loading | default "lazy" }}" alt="{{ .alt }}"
+  {{- with .title }} title="{{ . }}"{{ end }}
+  {{- with .class }} class="{{ . }}"{{ end }}>

@@ -1,5 +1,14 @@
-{{- /* Bootstrap provides the navbar dropdowns and the mobile offcanvas menu */}}
+{{- /* Bootstrap provides the navbar dropdowns, the mobile offcanvas menu and the search dialog */}}
 {{- with resources.Get "js/vendor/bootstrap.bundle.min.js" | fingerprint }}
 <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+{{- /* Copy buttons on code blocks (render-codeblock.html sets hasCodeBlock) */}}
+{{- if .Store.Get "hasCodeBlock" }}
+{{- partial "footer/js.html" (dict "src" "js/clipboard.js") }}
+{{- end }}
+{{- if site.Params.search.enable }}
+{{- /* worker_threads is only used by FlexSearch's Node worker mode */}}
+{{- partial "footer/js.html" (dict "src" "js/flexsearch.js" "template" true "externals" (slice "worker_threads")) }}
+{{- partial "footer/js.html" (dict "src" "js/search-modal.js") }}
 {{- end }}
 {{- partial "footer/scripts-custom.html" . }}

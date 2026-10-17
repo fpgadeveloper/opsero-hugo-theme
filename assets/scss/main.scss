@@ -1,6 +1,5 @@
-// Opsero theme stylesheet, adapted from @thulite/doks-core (MIT, see
+// Opsero theme stylesheet, adapted from @thulite/doks-core 1.9.3 (MIT, see
 // LICENSE.thulite). Bootstrap 5.3.8 is vendored in assets/bootstrap/scss.
-
 
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
 @import "../bootstrap/scss/functions";
@@ -67,6 +66,7 @@
 @import "common/dark";
 @import "components/alerts";
 @import "components/buttons";
+@import "components/cards";
 @import "components/callouts";
 @import "components/expressive-code";
 @import "components/code";
@@ -76,11 +76,15 @@
 @import "components/images";
 @import "components/mermaid";
 @import "components/modals";
+@import "components/preview";
 @import "components/search";
 @import "components/section-nav";
+@import "components/section-switcher";
 @import "components/steps";
 @import "components/tables";
 @import "components/tabs";
+@import "components/toc";
+@import "components/tree";
 @import "layouts/footer";
 @import "layouts/header";
 @import "layouts/pages";

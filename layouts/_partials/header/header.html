@@ -3,7 +3,10 @@
   of dropdowns, and the color mode toggle. On small screens the menu moves into
   an offcanvas panel.
 
-  Site params: logoImage, logoImageDark, logoWidth, containerBreakpoint.
+  Site params: logoImage, logoImageDark, logoWidth, containerBreakpoint,
+  colorModeTogglerClass (classes that place the toggle in the mobile menu),
+  search.enable (adds search buttons and the search dialog).
+  Menu entry params: external (opens in a new tab), badge (e.g. "NEW").
 */ -}}
 <div class="sticky-top">
 <header class="navbar navbar-expand-lg">
@@ -13,6 +16,12 @@
       <img class="site-logo site-logo--light" src="{{ site.Params.logoImage | relURL }}" alt="{{ site.Title }}" {{ with site.Params.logoWidth }}width="{{ . }}"{{ end }}>
       <img class="site-logo site-logo--dark" src="{{ site.Params.logoImageDark | default site.Params.logoImage | relURL }}" alt="{{ site.Title }}" {{ with site.Params.logoWidth }}width="{{ . }}"{{ end }}>
     </a>
+
+    {{- if site.Params.search.enable }}
+    <button type="button" id="searchToggleMobile" class="btn btn-link nav-link mx-2 d-lg-none" aria-label="Search website">
+      {{ partial "icon.html" "search" }}
+    </button>
+    {{- end }}
 
     <button class="btn btn-link nav-link mx-2 order-3 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavMain" aria-controls="offcanvasNavMain" aria-label="Open main navigation menu">
       {{ partial "icon.html" "menu" }}
@@ -44,13 +53,20 @@
           </li>
             {{- else }}
           <li class="nav-item">
-            <a class="nav-link{{ if $active }} active{{ end }}" href="{{ .URL | relLangURL }}"{{ if $active }} aria-current="true"{{ end }}>{{ .Name }}</a>
+            {{- $href := cond (.Params.external | default false) .URL (.URL | relLangURL) }}
+            <a class="nav-link{{ if $active }} active{{ end }}" href="{{ $href }}"{{ if $active }} aria-current="true"{{ end }}{{ if .Params.external }} target="_blank" rel="noopener"{{ end }}>{{ .Name }}{{ with .Params.badge }} <sup class="nav-badge">{{ . }}</sup>{{ end }}</a>
           </li>
             {{- end }}
           {{- end }}
         </ul>
 
-        <button id="buttonColorMode" class="btn btn-link mx-auto nav-link p-0 ms-lg-2 me-lg-1" type="button" aria-label="Toggle theme">
+        {{- if site.Params.search.enable }}
+        <button type="button" id="searchToggleDesktop" class="btn btn-link nav-link p-2 d-none d-lg-block" aria-label="Search website">
+          {{ partial "icon.html" "search" }}
+        </button>
+        {{- end }}
+
+        <button id="buttonColorMode" class="btn btn-link {{ site.Params.colorModeTogglerClass | default "mx-auto" }} nav-link p-0 ms-lg-2 me-lg-1" type="button" aria-label="Toggle theme">
           {{ partial "icon.html" (dict "name" "moon" "attrs" `data-bs-theme-value="dark"`) }}
           {{ partial "icon.html" (dict "name" "sun" "attrs" `data-bs-theme-value="light"`) }}
         </button>
@@ -60,3 +76,6 @@
   </div>
 </header>
 </div>
+{{- if site.Params.search.enable }}
+{{ partial "header/search-modal.html" . }}
+{{- end }}

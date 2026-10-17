@@ -1,9 +1,12 @@
-{{- /* Classes for <body>, e.g. "single home" or "list section buy" */ -}}
+{{- /* Classes for <body>, e.g. "single home", "list section blog" or "list term tags".
+       Same scheme as @thulite/core, so site CSS can target page kinds. */ -}}
 {{- $template := cond (in (slice "page" "home" "404") .Kind) "single" "list" -}}
 {{- $name := "" -}}
-{{- if .IsHome }}{{ $name = "home" -}}
-{{- else if eq .Kind "404" }}{{ $name = "error404" -}}
+{{- if eq .Kind "taxonomy" }}{{ $name = printf "taxonomy %s" .Data.Plural -}}
+{{- else if eq .Kind "term" }}{{ $name = printf "term %s" .Section -}}
 {{- else if .Section }}{{ $name = printf "section %s" .Section -}}
-{{- else if .File }}{{ $name = .File.ContentBaseName -}}
+{{- else if eq .Kind "page" }}{{ with .File }}{{ $name = .ContentBaseName }}{{ end -}}
+{{- else if .IsHome }}{{ $name = "home" -}}
+{{- else if eq .Kind "404" }}{{ $name = "error404" -}}
 {{- end -}}
 {{- return (printf "%s %s" $template $name) -}}

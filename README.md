@@ -71,7 +71,7 @@ Sites can override `_partials/head/custom-head.html` and
 ## Vendored code
 
 * Bootstrap 5.3.8 SCSS and JS bundle (MIT, `assets/bootstrap/LICENSE`)
-* Doks SCSS and color-mode script from @thulite/doks-core 1.8.3
+* Doks SCSS and color-mode script from @thulite/doks-core 1.9.3
   (MIT, `LICENSE.thulite`)
 * Jost font (SIL Open Font License, `static/fonts/vendor/jost/OFL.txt`)
 * Tabler icons, inlined in `_partials/icon.html` (MIT)

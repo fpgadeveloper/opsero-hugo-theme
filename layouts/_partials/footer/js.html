@@ -1,0 +1,14 @@
+{{- /*
+  Bundles a script from assets/ with Hugo's built-in esbuild and writes a
+  <script> tag. Usage:
+    partial "footer/js.html" (dict "src" "js/clipboard.js")
+    partial "footer/js.html" (dict "src" "js/flexsearch.js" "template" true)
+  With "template" true the file is first run through Hugo's template engine.
+  "externals" lists imports to leave unbundled (e.g. Node-only modules).
+*/ -}}
+{{- $js := resources.Get .src -}}
+{{- if .template }}{{ $js = $js | resources.ExecuteAsTemplate .src . }}{{ end -}}
+{{- $opts := dict "target" "es2015" "minify" hugo.IsProduction -}}
+{{- with .externals }}{{ $opts = merge $opts (dict "externals" .) }}{{ end -}}
+{{- $js = $js | js.Build $opts | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>

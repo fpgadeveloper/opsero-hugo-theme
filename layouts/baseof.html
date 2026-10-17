@@ -5,7 +5,12 @@
     {{ partial "header/header.html" . }}
     <div class="wrap container-{{ site.Params.containerBreakpoint | default "lg" }}" role="document">
       <div class="content">
+        {{- /* With a fluid container, pages outside the main sections (and list
+               pages) get a fixed-width inner container, as in Doks */}}
+        {{- $boxed := and (eq site.Params.containerBreakpoint "fluid") (or (not (in site.Params.mainSections .Type)) .IsNode) }}
+        {{- if $boxed }}<div class="container p-0">{{ end }}
         {{ block "main" . }}{{ end }}
+        {{- if $boxed }}</div>{{ end }}
       </div>
     </div>
     {{ block "sidebar-prefooter" . }}{{ end }}

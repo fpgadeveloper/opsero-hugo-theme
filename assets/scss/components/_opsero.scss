@@ -4,3 +4,8 @@
 .site-logo--dark { display: none; }
 [data-bs-theme="dark"] .site-logo--light { display: none; }
 [data-bs-theme="dark"] .site-logo--dark { display: inline-block; }
+
+// Images rendered by _partials/image.html carry width and height attributes
+// (so the page doesn't jump while they load); keep their aspect ratio when CSS
+// scales the width down.
+img[width][height] { height: auto; }

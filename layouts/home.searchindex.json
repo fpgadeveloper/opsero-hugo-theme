@@ -1,6 +1,6 @@
 {{- $pages := where site.Pages "Params.exclude_search" "!=" true -}}
-{{- if gt (len site.Params.search.exclKinds) 0 }}{{- $pages = where $pages "Kind" "not in" site.Params.search.exclKinds }}{{ end -}}
-{{- if gt (len site.Params.search.exclTypes) 0 }}{{- $pages = where $pages "Type" "not in" site.Params.search.exclTypes }}{{ end -}}
+{{- with site.Params.search.exclKinds }}{{- $pages = where $pages "Kind" "not in" . }}{{ end -}}
+{{- with site.Params.search.exclTypes }}{{- $pages = where $pages "Type" "not in" . }}{{ end -}}
 
 {{/* Source: https://github.com/frjo/hugo-theme-zen/blob/main/layouts/home.searchindex.json */}}
 {{- $.Scratch.Set "searchindex" slice -}}

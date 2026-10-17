@@ -1,0 +1,12 @@
+{{- /* "On this page" table of contents beside a docs page. With scrollSpy the
+       nav gets id "toc", which Bootstrap's ScrollSpy (see baseof.html) tracks. */ -}}
+<div class="page-links">
+  {{- if .Fragments.Headings }}
+  <h3>{{ i18n "on_this_page" }}</h3>
+  {{- if site.Params.scrollSpy }}
+  {{ .TableOfContents | replaceRE "<nav id=\"TableOfContents\">" "<nav id=\"toc\">" | safeHTML }}
+  {{- else }}
+  {{ .TableOfContents }}
+  {{- end }}
+  {{- end }}
+</div>

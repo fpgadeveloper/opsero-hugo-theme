@@ -5,7 +5,10 @@
 
   Site params: logoImage, logoImageDark, logoWidth, containerBreakpoint,
   colorModeTogglerClass (classes that place the toggle in the mobile menu),
-  search.enable (adds search buttons and the search dialog).
+  search.enable (adds search buttons and the search dialog), navbarTitle
+  (text beside the logo) and navbarTitleOffset (nudges it down, e.g. "3px"),
+  navbarMenuClass (extra classes for the menu, e.g. "justify-content-center"),
+  sectionNav (sections whose pages get a section menu button on small screens).
   Menu entry params: external (opens in a new tab), badge (e.g. "NEW").
 */ -}}
 <div class="sticky-top">
@@ -15,12 +18,36 @@
     <a class="navbar-brand me-auto me-lg-3" href="{{ "/" | relLangURL }}" aria-label="{{ site.Title }}">
       <img class="site-logo site-logo--light" src="{{ site.Params.logoImage | relURL }}" alt="{{ site.Title }}" {{ with site.Params.logoWidth }}width="{{ . }}"{{ end }}>
       <img class="site-logo site-logo--dark" src="{{ site.Params.logoImageDark | default site.Params.logoImage | relURL }}" alt="{{ site.Title }}" {{ with site.Params.logoWidth }}width="{{ . }}"{{ end }}>
+      {{- with site.Params.navbarTitle }}
+      <span class="navbar-title"{{ with site.Params.navbarTitleOffset }} style="position: relative; top: {{ . }};"{{ end }}>{{ . }}</span>
+      {{- end }}
     </a>
 
     {{- if site.Params.search.enable }}
     <button type="button" id="searchToggleMobile" class="btn btn-link nav-link mx-2 d-lg-none" aria-label="Search website">
       {{ partial "icon.html" "search" }}
     </button>
+    {{- end }}
+
+    {{- if in site.Params.sectionNav .Section }}
+    <button class="btn btn-link d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavSection" aria-controls="offcanvasNavSection" aria-label="Open section navigation menu">
+      {{ partial "icon.html" "dots-vertical" }}
+    </button>
+    <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="offcanvasNavSection" aria-labelledby="offcanvasNavSectionLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavSectionLabel">{{ with site.GetPage "section" .Section }}{{ .Title }}{{ else }}{{ $.Section | humanize }}{{ end }}</h5>
+        <button type="button" class="btn btn-link nav-link p-0 ms-auto" data-bs-dismiss="offcanvas" aria-label="Close">
+          {{ partial "icon.html" "x" }}
+        </button>
+      </div>
+      <div class="offcanvas-body">
+        <aside class="doks-sidebar mt-n3">
+          <nav id="doks-docs-nav" aria-label="Tertiary navigation">
+            {{ partial "sidebar/section-menu.html" . }}
+          </nav>
+        </aside>
+      </div>
+    </div>
     {{- end }}
 
     <button class="btn btn-link nav-link mx-2 order-3 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavMain" aria-controls="offcanvasNavMain" aria-label="Open main navigation menu">
@@ -35,7 +62,7 @@
         </button>
       </div>
       <div class="offcanvas-body d-flex flex-column flex-lg-row justify-content-between">
-        <ul class="navbar-nav flex-grow-1">
+        <ul class="navbar-nav flex-grow-1{{ with site.Params.navbarMenuClass }} {{ . }}{{ end }}">
           {{- $current := . }}
           {{- range site.Menus.main }}
             {{- $active := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) (eq .Name $current.Title) }}

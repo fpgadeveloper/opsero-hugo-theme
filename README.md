@@ -29,6 +29,13 @@ Requires Hugo extended (it compiles the SCSS with the built-in libsass).
 * SEO tags, favicons and web manifest, robots.txt, sitemap
 * Default `single.html` (type `legal` shows a "Last updated" line),
   `list.html` and `404.html`
+* Docs layout for the sections listed in `sectionNav`: section menu on the
+  left (also in an offcanvas panel on small screens), "On this page" table of
+  contents on the right with optional scrollspy, previous/next links, and a
+  card list on section pages
+* Markdown images are looked up in the page bundle, then in the site's
+  `assets/`, and served as they are (no resizing), so optimize them when they
+  are added
 
 ## Site configuration
 
@@ -42,7 +49,23 @@ images = ["cover.jpg"]               # Open Graph / Twitter image
 logoImage = "images/logo.png"
 logoImageDark = "images/logo-dark.png"
 logoWidth = "200px"
+# navbarTitle = "DOCS"               # text beside the logo
+# navbarTitleOffset = "3px"          # nudges the title down
+# navbarMenuClass = "justify-content-center"
+# containerBreakpoint = "fluid"      # default "lg"
 # footer = "..."                     # replaces the default copyright line
+
+# Docs sites
+# mainSections = ["op031", "tools"]
+# sectionNav = ["op031", "tools"]    # sections that get the docs layout
+# scrollSpy = true                   # highlight the heading in view in the TOC
+# headlineHash = false               # no "#" anchors on headings
+
+# [search]                           # FlexSearch dialog in the navbar
+#   enable = true
+#   limit = 99
+#   showSummary = true
+#   showDate = false
 [social]
   twitter = "fpgadeveloper"
 [seo.title]
@@ -53,7 +76,9 @@ logoWidth = "200px"
 ```
 
 Page front matter can set `seo.title`, `seo.description`, `seo.canonical`,
-`seo.noindex` and `images`.
+`seo.noindex` and `images`. On docs pages, `toc: false` hides the table of
+contents. A docs section's menu is the site menu `sidebar_<section>` if there
+is one, else the section's subsections and their pages.
 
 Sites provide `assets/favicon.png` (at least 512x512) and `assets/favicon.svg`.
 
@@ -66,7 +91,9 @@ Sites provide `assets/favicon.png` (at least 512x512) and `assets/favicon.svg`.
 * `assets/scss/common/_custom.scss`: extra styles
 
 Sites can override `_partials/head/custom-head.html` and
-`_partials/footer/scripts-custom.html` to add tags.
+`_partials/footer/scripts-custom.html` to add tags, and the docs partials
+(`_partials/sidebar/section-menu.html`, `_partials/main/docs-navigation.html`
+and so on) to change those parts.
 
 ## Vendored code
 

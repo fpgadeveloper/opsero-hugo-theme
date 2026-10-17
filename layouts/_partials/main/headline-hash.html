@@ -1,0 +1,2 @@
+{{- /* Adds a "#" anchor link to every h2-h9 heading in the content passed in */ -}}
+{{ . | replaceRE "(<h[2-9] id=\"([^\"]+)\".+)(</h[2-9]+>)" `${1}<a href="#${2}" class="anchor" aria-hidden="true">#</a> ${3}` | safeHTML }}

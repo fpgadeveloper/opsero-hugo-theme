@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="{{ site.Language.LanguageCode | default "en" }}" data-bs-theme="auto">
   {{ partial "head/head.html" . }}
-  <body class="{{ partial "body-class.html" . }}">
+  {{- /* scrollSpy: Bootstrap highlights the heading in view in the docs table of contents */}}
+  <body class="{{ partial "body-class.html" . }}"{{ if site.Params.scrollSpy }} data-bs-spy="scroll" data-bs-target="#toc" data-bs-root-margin="0px 0px -60%" data-bs-smooth-scroll="true" tabindex="0"{{ end }}>
     {{ partial "header/header.html" . }}
     <div class="wrap container-{{ site.Params.containerBreakpoint | default "lg" }}" role="document">
       <div class="content">

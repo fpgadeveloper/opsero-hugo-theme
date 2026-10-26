@@ -3,7 +3,7 @@
   <div class="col-md-12 col-lg-10 col-xl-8">
     <article>
       <h1 class="text-center">{{ if eq .CurrentSection .FirstSection }}{{ .Section | humanize }}{{ else }}{{ .Title }}{{ end }}</h1>
-      {{ with .Content }}<div class="text-center">{{ . }}</div>{{ end }}
+      {{ with .Content }}<div class="text-center">{{ . }}</div>{{ else }}{{ with .Description }}<p class="text-center">{{ . }}</p>{{ end }}{{ end }}
       <div class="card-list">
         {{- $currentSection := .CurrentSection }}
         {{- range where site.RegularPages.ByTitle "Section" .Section }}

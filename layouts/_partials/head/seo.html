@@ -6,16 +6,16 @@
   seo.title.suffix, seo.description.summaryFallback (use the page summary when
   there is no description), seo.schemas.name, seo.schemas.logo, seo.schemas.sameAs.
 
-  Preview images come from the _funcs/get-page-images partial (Hugo's built-in
-  one, which a site can override). Sites add extra JSON-LD in
-  _partials/head/seo-custom.html.
+  The page name in <title> comes from the _funcs/get-page-title partial and
+  preview images from _funcs/get-page-images (Hugo's built-in one); a site can
+  override either. Sites add extra JSON-LD in _partials/head/seo-custom.html.
 */ -}}
 {{- $seo := .Params.seo | default dict -}}
 
 {{- $title := $seo.title -}}
 {{- if not $title -}}
   {{- $sep := site.Params.seo.title.separator | default " | " -}}
-  {{- $title = printf "%s%s%s" .Title $sep (site.Params.seo.title.suffix | default site.Title) -}}
+  {{- $title = printf "%s%s%s" (partial "_funcs/get-page-title" .) $sep (site.Params.seo.title.suffix | default site.Title) -}}
 {{- end }}
 <title>{{ $title }}</title>
 

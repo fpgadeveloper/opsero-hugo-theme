@@ -6,9 +6,10 @@
   seo.title.suffix, seo.description.summaryFallback (use the page summary when
   there is no description), seo.schemas.name, seo.schemas.logo, seo.schemas.sameAs.
 
-  The page name in <title> comes from the _funcs/get-page-title partial and
-  preview images from _funcs/get-page-images (Hugo's built-in one); a site can
-  override either. Sites add extra JSON-LD in _partials/head/seo-custom.html.
+  The page name in <title> comes from the _funcs/get-page-title partial, the
+  description from _funcs/get-page-description and preview images from
+  _funcs/get-page-images (Hugo's built-in one); a site can override any of
+  them. Sites add extra JSON-LD in _partials/head/seo-custom.html.
 */ -}}
 {{- $seo := .Params.seo | default dict -}}
 
@@ -19,11 +20,7 @@
 {{- end }}
 <title>{{ $title }}</title>
 
-{{- $description := or $seo.description .Description }}
-{{- if and (not $description) site.Params.seo.description.summaryFallback }}
-  {{- $description = or (.Summary | plainify) (.Params.summary | plainify) }}
-{{- end }}
-{{- $description = $description | default site.Params.description }}
+{{- $description := partial "_funcs/get-page-description" . }}
 <meta name="description" content="{{ $description }}">
 <link rel="canonical" href="{{ $seo.canonical | default .Permalink }}">
 {{- if or $seo.noindex (eq .Kind "404") }}

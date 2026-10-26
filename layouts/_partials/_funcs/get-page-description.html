@@ -1,0 +1,11 @@
+{{- /*
+  The page's meta description: seo.description, then description, then (with
+  seo.description.summaryFallback) the page summary, then the site description.
+  A site can override this partial.
+*/ -}}
+{{- $seo := .Params.seo | default dict -}}
+{{- $description := or $seo.description .Description -}}
+{{- if and (not $description) site.Params.seo.description.summaryFallback -}}
+  {{- $description = or (.Summary | plainify) (.Params.summary | plainify) -}}
+{{- end -}}
+{{- return $description | default site.Params.description -}}
